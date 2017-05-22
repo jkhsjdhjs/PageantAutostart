@@ -1,0 +1,10 @@
+{
+	"keys": [{
+		"path": "C:\\example\\path",
+		"pass": "EX4MPL3_PASSW0RD"
+	},
+	{
+		"path": "D:\\second\\key\\this_time\\without_a_password.ppk",
+		"pass": null
+	}]
+}
