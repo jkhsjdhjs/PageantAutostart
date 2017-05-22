@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace PageantAutostart {
+﻿namespace PageantAutostart {
     class KeyConfig {
         public string path, pass;
         public KeyConfig(string path = null, string pass = null) {
