@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using JsonConfig;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace PageantAutostart {
     static class Program {
@@ -41,15 +42,18 @@ namespace PageantAutostart {
          * 3 TextBoxHandleError
          * 4 PassphraseError
          * 5 ButtonHandleError
+         * 6 No Passphrase Provided
          */
-        private static int LoadKey(string key, string pass) {
-            Process p = Process.Start(Environment.ExpandEnvironmentVariables(key));
+        private static int LoadKey(string key, string pass = null) {
+            Process p = Process.Start(key);
             if(p == null || p.HasExited || p.ProcessName != Settings.PageantProcessName)
                 return 1;
             for(byte cnt = 0; cnt <= 40 && p.MainWindowHandle.ToInt32() == 0; cnt++)
                 Thread.Sleep(250);
             if(p.MainWindowHandle.ToInt32() == 0)
                 return 2;
+            else if(pass == null)
+                return 6;
             IntPtr TextBoxHandle = DLL.FindWindowEx(p.MainWindowHandle, IntPtr.Zero, Settings.TextBoxClassName, null);
             if(TextBoxHandle.ToInt32() == 0)
                 return 3;
@@ -63,48 +67,67 @@ namespace PageantAutostart {
         }
 
         public static int Main(string[] args) {
-            Config.SetUserConfig(Config.ParseJson("config.json"));
             int failedKeys = 0;
+            Config config = new Config();
             ApplyArgs(ParseArgs(args));
             Console.Title = Settings.ConsoleTitle;
             Console.WriteLine(Messages.Launch);
+            if(File.Exists(Settings.ConfigFile)) {
+                try {
+                    config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(Settings.ConfigFile));
+                    Console.WriteLine("Loaded Config: " + Settings.ConfigFile);
+                }
+                catch(JsonReaderException) {
+                    PrintError("Failed to load config: " + Settings.ConfigFile);
+                    Console.WriteLine("Falling back to default config.");
+                }
+            }
+            else
+                Console.WriteLine("No config file, loading defaults.");
             Console.WriteLine();
-            string[] keys = new string[] {@"%USERPROFILE%\.ssh\id_rsa.ppk"};
-            foreach(string k in keys) {
+            foreach(KeyConfig kc in config.keys) {
                 bool error = false;
-                switch(LoadKey(k, "the respective passphrase")) {
-                    case 0:
-                        break;
-                    case 1:
-                        PrintError(Messages.PageantLaunchError);
-                        error = true;
-                        break;
-                    case 2:
-                        PrintError(Messages.PageantWindowDidNotAppear);
-                        error = true;
-                        break;
-                    case 3:
-                        PrintError(Messages.TextBoxHandleError);
-                        error = true;
-                        break;
-                    case 4:
-                        PrintError(Messages.PassphraseError);
-                        error = true;
-                        break;
-                    case 5:
-                        PrintError(Messages.ButtonHandleError);
-                        error = true;
-                        break;
+                string path = Environment.ExpandEnvironmentVariables(kc.path);
+                if(File.Exists(path))
+                    switch(LoadKey(path, kc.pass)) {
+                        case 1:
+                            PrintError(Messages.PageantLaunchError);
+                            error = true;
+                            break;
+                        case 2:
+                            PrintError(Messages.PageantWindowDidNotAppear);
+                            error = true;
+                            break;
+                        case 3:
+                            PrintError(Messages.TextBoxHandleError);
+                            error = true;
+                            break;
+                        case 4:
+                            PrintError(Messages.PassphraseError);
+                            error = true;
+                            break;
+                        case 5:
+                            PrintError(Messages.ButtonHandleError);
+                            error = true;
+                            break;
+                        case 6:
+                            PrintError(Messages.NoPassphraseProvided);
+                            error = true;
+                            break;
 
+                    }
+                else {
+                    PrintError(Messages.KeyNotFound);
+                    error = true;
                 }
                 if(error) {
-                    PrintError("while loading Key " + k);
+                    PrintError("while loading Key " + kc.path);
                     Console.WriteLine();
                     failedKeys++;
                 }
                 
             }
-            Console.WriteLine("Failed to load " + Convert.ToString(failedKeys) + " Keys, " + Convert.ToString(keys.Length - failedKeys) + " succeeded!");
+            Console.WriteLine("Failed to load " + Convert.ToString(failedKeys) + " Keys, " + Convert.ToString(config.keys.Length - failedKeys) + " succeeded!");
             Console.WriteLine("Exit in 3 seconds...");
             Thread.Sleep(3000);
             return failedKeys;

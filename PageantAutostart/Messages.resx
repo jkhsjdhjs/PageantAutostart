@@ -120,8 +120,14 @@
   <data name="ButtonHandleError" xml:space="preserve">
     <value>Error getting Button Handle</value>
   </data>
+  <data name="KeyNotFound" xml:space="preserve">
+    <value>Key not found</value>
+  </data>
   <data name="Launch" xml:space="preserve">
     <value>PageantAutostart v1.0 launched!</value>
+  </data>
+  <data name="NoPassphraseProvided" xml:space="preserve">
+    <value>Key requires a passphrase</value>
   </data>
   <data name="PageantLaunchError" xml:space="preserve">
     <value>Error launching Pageant</value>

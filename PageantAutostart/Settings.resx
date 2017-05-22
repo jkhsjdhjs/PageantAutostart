@@ -117,8 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConfigFile" xml:space="preserve">
+    <value>config.json</value>
+  </data>
   <data name="ConsoleTitle" xml:space="preserve">
     <value>PageantAutostart</value>
+  </data>
+  <data name="DefaultPath" xml:space="preserve">
+    <value>%USERPROFILE%\.ssh\id_rsa.ppk</value>
   </data>
   <data name="OKBtnClassName" xml:space="preserve">
     <value>Button</value>

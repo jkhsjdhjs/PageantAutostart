@@ -70,11 +70,29 @@ namespace PageantAutostart {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Key not found.
+        /// </summary>
+        internal static string KeyNotFound {
+            get {
+                return ResourceManager.GetString("KeyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PageantAutostart v1.0 launched!.
         /// </summary>
         internal static string Launch {
             get {
                 return ResourceManager.GetString("Launch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key requires a passphrase.
+        /// </summary>
+        internal static string NoPassphraseProvided {
+            get {
+                return ResourceManager.GetString("NoPassphraseProvided", resourceCulture);
             }
         }
         

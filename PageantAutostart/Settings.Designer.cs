@@ -61,11 +61,29 @@ namespace PageantAutostart {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to config.json.
+        /// </summary>
+        internal static string ConfigFile {
+            get {
+                return ResourceManager.GetString("ConfigFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PageantAutostart.
         /// </summary>
         internal static string ConsoleTitle {
             get {
                 return ResourceManager.GetString("ConsoleTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to %USERPROFILE%\.ssh\id_rsa.ppk.
+        /// </summary>
+        internal static string DefaultPath {
+            get {
+                return ResourceManager.GetString("DefaultPath", resourceCulture);
             }
         }
         
