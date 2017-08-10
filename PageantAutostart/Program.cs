@@ -114,7 +114,6 @@ namespace PageantAutostart {
                             PrintError(Messages.NoPassphraseProvided);
                             error = true;
                             break;
-
                     }
                 else {
                     PrintError(Messages.KeyNotFound);
@@ -125,7 +124,6 @@ namespace PageantAutostart {
                     Console.WriteLine();
                     failedKeys++;
                 }
-                
             }
             Console.WriteLine("Failed to load " + Convert.ToString(failedKeys) + " Keys, " + Convert.ToString(config.keys.Length - failedKeys) + " succeeded!");
             Console.WriteLine("Exit in 3 seconds...");

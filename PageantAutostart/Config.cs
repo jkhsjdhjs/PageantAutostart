@@ -12,9 +12,8 @@
         public KeyConfig[] keys;
         public Config(KeyConfig[] keys = null) {
             this.keys = keys;
-            if(this.keys == null) {
+            if(this.keys == null)
                 this.keys = new KeyConfig[] { new KeyConfig() };
-            }
         }
     }
 }
